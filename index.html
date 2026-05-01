@@ -10,347 +10,102 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --cream:      #F5F0E8;
-      --charcoal:   #2C2C2C;
-      --gold:       #C9A84C;
-      --green:      #2D4A3E;
-      --terracotta: #C4622D;
-      --cream-dark: #E8E0D0;
-      --pad:        60px;
-    }
-
-    body {
-      background: #1a1a1a;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      font-family: 'Lato', sans-serif;
-      font-weight: 300;
-      padding: 20px 0 40px;
-    }
-
-    .viewport {
-      position: relative;
-      width: min(540px, 90vw);
-      aspect-ratio: 1 / 1;
-      overflow: hidden;
-      box-shadow: 0 24px 80px rgba(0,0,0,.55);
-    }
-
-    .track {
-      display: flex;
-      width: 500%;
-      height: 100%;
-      transition: transform .55s cubic-bezier(.77,0,.18,1);
-    }
-
-    .slide {
-      width: 20%;
-      height: 100%;
-      flex-shrink: 0;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .nav {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 50;
-      background: rgba(255,255,255,.12);
-      backdrop-filter: blur(4px);
-      border: 1px solid rgba(255,255,255,.2);
-      color: #fff;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: background .2s;
-      user-select: none;
-    }
+    :root { --cream: #F5F0E8; --charcoal: #2C2C2C; --gold: #C9A84C; --green: #2D4A3E; --terracotta: #C4622D; --cream-dark: #E8E0D0; --pad: 60px; }
+    body { background: #1a1a1a; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; font-family: 'Lato', sans-serif; font-weight: 300; padding: 20px 0 40px; }
+    .viewport { position: relative; width: min(540px, 90vw); aspect-ratio: 1 / 1; overflow: hidden; box-shadow: 0 24px 80px rgba(0,0,0,.55); }
+    .track { display: flex; width: 500%; height: 100%; transition: transform .55s cubic-bezier(.77,0,.18,1); }
+    .slide { width: 20%; height: 100%; flex-shrink: 0; position: relative; overflow: hidden; }
+    .nav { position: absolute; top: 50%; transform: translateY(-50%); z-index: 50; background: rgba(255,255,255,.12); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,.2); color: #fff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background .2s; user-select: none; }
     .nav:hover { background: rgba(255,255,255,.25); }
-    .nav.prev { left: -20px; }
-    .nav.next { right: -20px; }
+    .nav.prev { left: -20px; } .nav.next { right: -20px; }
     .nav svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-
-    .counter-bar {
-      margin-top: 18px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: rgba(255,255,255,.3);
-      transition: background .3s, transform .3s;
-      cursor: pointer;
-    }
+    .counter-bar { margin-top: 18px; display: flex; align-items: center; gap: 10px; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.3); transition: background .3s, transform .3s; cursor: pointer; }
     .dot.active { background: #fff; transform: scale(1.35); }
-    .counter-label {
-      color: rgba(255,255,255,.45);
-      font-family: 'Lato', sans-serif;
-      font-weight: 300;
-      font-size: 11px;
-      letter-spacing: .12em;
-      margin-left: 6px;
-    }
-
-    .slide-counter {
-      position: absolute;
-      bottom: 22px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-family: 'Lato', sans-serif;
-      font-weight: 300;
-      font-size: clamp(9px, 1.6vw, 12px);
-      letter-spacing: .18em;
-      z-index: 10;
-      white-space: nowrap;
-    }
-
-    /* Export panel */
-    .export-panel {
-      margin-top: 28px;
-      width: min(540px, 90vw);
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 12px;
-      padding: 18px 20px;
-    }
-    .export-title {
-      color: rgba(255,255,255,.45);
-      font-size: 10px;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-      font-family: 'Lato', sans-serif;
-    }
-    .export-buttons {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
-    }
-    .dl-btn {
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.15);
-      color: rgba(255,255,255,.75);
-      border-radius: 8px;
-      padding: 10px 4px;
-      font-family: 'Lato', sans-serif;
-      font-weight: 300;
-      font-size: 11px;
-      letter-spacing: .06em;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      transition: background .2s, color .2s;
-      -webkit-tap-highlight-color: transparent;
-    }
+    .counter-label { color: rgba(255,255,255,.45); font-family: 'Lato', sans-serif; font-weight: 300; font-size: 11px; letter-spacing: .12em; margin-left: 6px; }
+    .slide-counter { position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%); font-family: 'Lato', sans-serif; font-weight: 300; font-size: clamp(9px,1.6vw,12px); letter-spacing: .18em; z-index: 10; white-space: nowrap; }
+    .slide-handle { position: absolute; bottom: 22px; right: var(--pad); font-family: 'Lato', sans-serif; font-weight: 300; font-size: clamp(9px,1.6vw,11px); letter-spacing: .12em; z-index: 10; white-space: nowrap; }
+    #s1 .slide-handle, #s3 .slide-handle { color: rgba(255,255,255,.38); }
+    #s2 .slide-handle, #s4 .slide-handle { color: rgba(44,44,44,.32); }
+    #s5 .slide-handle { color: rgba(44,44,44,.32); bottom: 48px; }
+    .ig-actions { position: absolute; bottom: 0; left: 0; right: 0; height: 42px; display: flex; align-items: center; padding: 0 20px; border-top: 1px solid rgba(44,44,44,.1); background: rgba(245,240,232,.88); backdrop-filter: blur(4px); z-index: 11; gap: 18px; }
+    .ig-actions .ig-icon { display: flex; align-items: center; gap: 5px; color: #2C2C2C; }
+    .ig-actions .ig-icon svg { width: 22px; height: 22px; stroke: #2C2C2C; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+    .ig-actions .ig-save { margin-left: auto; }
+    .export-panel { margin-top: 28px; width: min(540px, 90vw); background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 18px 20px; }
+    .export-title { color: rgba(255,255,255,.45); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 14px; font-family: 'Lato', sans-serif; }
+    .export-buttons { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+    .dl-btn { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); color: rgba(255,255,255,.75); border-radius: 8px; padding: 10px 4px; font-family: 'Lato', sans-serif; font-weight: 300; font-size: 11px; letter-spacing: .06em; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; transition: background .2s, color .2s; -webkit-tap-highlight-color: transparent; }
     .dl-btn:hover, .dl-btn:active { background: rgba(255,255,255,.18); color: #fff; }
     .dl-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     .dl-btn.loading { opacity: .5; pointer-events: none; }
-
-    .export-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.7);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 12px;
-      color: #fff;
-      font-family: 'Lato', sans-serif;
-      font-size: 13px;
-      letter-spacing: .1em;
-    }
+    .export-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.7); z-index: 200; align-items: center; justify-content: center; flex-direction: column; gap: 12px; color: #fff; font-family: 'Lato', sans-serif; font-size: 13px; letter-spacing: .1em; }
     .export-overlay.visible { display: flex; }
-    .spinner {
-      width: 32px; height: 32px;
-      border: 2px solid rgba(255,255,255,.2);
-      border-top-color: #C9A84C;
-      border-radius: 50%;
-      animation: spin .8s linear infinite;
-    }
+    .spinner { width: 32px; height: 32px; border: 2px solid rgba(255,255,255,.2); border-top-color: #C9A84C; border-radius: 50%; animation: spin .8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* Slide 1 */
     #s1 { background: linear-gradient(160deg,#1a1a1a 0%,#2a2218 35%,#1e1a12 65%,#0e0d0b 100%); }
-    #s1::before {
-      content: '';
-      position: absolute; inset: 0;
-      background:
-        radial-gradient(ellipse 80% 60% at 60% 40%, rgba(201,168,76,.07) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 70% at 20% 80%, rgba(45,74,62,.15) 0%, transparent 60%);
-    }
-    #s1::after {
-      content: '';
-      position: absolute; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
-      opacity: .5;
-      pointer-events: none;
-    }
-    .s1-photo {
-      position: absolute; inset: 0;
-      background-size: cover;
-      background-position: center;
-      z-index: 1;
-    }
-    .s1-photo-overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(to bottom, rgba(10,8,6,.52) 0%, rgba(10,8,6,.68) 100%);
-      z-index: 2;
-      display: none;
-    }
+    #s1::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(201,168,76,.07) 0%, transparent 70%), radial-gradient(ellipse 50% 70% at 20% 80%, rgba(45,74,62,.15) 0%, transparent 60%); }
+    #s1::after { content: ''; position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E"); opacity: .5; pointer-events: none; }
+    .s1-photo { position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 1; }
+    .s1-photo-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(10,8,6,.52) 0%, rgba(10,8,6,.68) 100%); z-index: 2; display: none; }
     #s1.has-photo .s1-photo-overlay { display: block; }
-    .s1-inner {
-      position: absolute; inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: var(--pad);
-      text-align: center;
-      z-index: 3;
-    }
-    .s1-quote {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-weight: 400;
-      font-size: clamp(18px, 3.8vw, 26px);
-      line-height: 1.55;
-      color: #fff;
-      margin-bottom: clamp(20px, 3vw, 32px);
-      max-width: 90%;
-    }
-    .s1-sub {
-      font-family: 'Lato', sans-serif;
-      font-weight: 300;
-      font-size: clamp(10px, 1.8vw, 13px);
-      letter-spacing: .22em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,.55);
-    }
-    .photo-picker-label {
-      position: absolute;
-      bottom: 52px;
-      left: var(--pad);
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      color: rgba(255,255,255,.45);
-      font-family: 'Lato', sans-serif;
-      font-size: clamp(8px, 1.4vw, 10px);
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      padding: 6px 10px;
-      border: 1px solid rgba(255,255,255,.2);
-      border-radius: 20px;
-      background: rgba(0,0,0,.3);
-      backdrop-filter: blur(4px);
-      transition: background .2s, color .2s;
-    }
+    .s1-inner { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: var(--pad); text-align: center; z-index: 3; }
+    .s1-quote { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: clamp(18px,3.8vw,26px); line-height: 1.55; color: #fff; margin-bottom: clamp(20px,3vw,32px); max-width: 90%; }
+    .s1-sub { font-family: 'Lato', sans-serif; font-weight: 300; font-size: clamp(10px,1.8vw,13px); letter-spacing: .22em; text-transform: uppercase; color: rgba(255,255,255,.55); }
+    .photo-picker-label { position: absolute; bottom: 52px; left: var(--pad); z-index: 10; display: flex; align-items: center; gap: 7px; color: rgba(255,255,255,.45); font-family: 'Lato', sans-serif; font-size: clamp(8px,1.4vw,10px); letter-spacing: .15em; text-transform: uppercase; cursor: pointer; -webkit-tap-highlight-color: transparent; padding: 6px 10px; border: 1px solid rgba(255,255,255,.2); border-radius: 20px; background: rgba(0,0,0,.3); backdrop-filter: blur(4px); transition: background .2s, color .2s; }
     .photo-picker-label:hover, .photo-picker-label:active { background: rgba(255,255,255,.15); color: #fff; }
     #s1.has-photo .photo-picker-label { color: rgba(255,255,255,.6); }
     .photo-picker-label svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; }
     #photoInput { display: none; }
-    .swipe-hint {
-      position: absolute;
-      bottom: 52px;
-      right: var(--pad);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: rgba(255,255,255,.35);
-      font-family: 'Lato', sans-serif;
-      font-size: clamp(8px, 1.4vw, 10px);
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      z-index: 3;
-    }
+    .swipe-hint { position: absolute; bottom: 52px; right: var(--pad); display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,.35); font-family: 'Lato', sans-serif; font-size: clamp(8px,1.4vw,10px); letter-spacing: .15em; text-transform: uppercase; z-index: 3; }
     .swipe-hint svg { width: 18px; height: 10px; stroke: currentColor; fill: none; stroke-width: 1.5; }
-    .s1 .slide-counter { color: rgba(255,255,255,.3); }
-
-    /* Slide 2 */
     #s2 { background: #F5F0E8; }
     .s2-inner { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; padding: var(--pad); z-index: 2; }
-    .s2-headline { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: clamp(22px, 4.5vw, 32px); line-height: 1.2; color: #2C2C2C; margin-bottom: clamp(24px, 4vw, 36px); }
-    .spectrum-row { display: flex; align-items: center; margin-bottom: clamp(24px, 4vw, 36px); position: relative; }
-    .spec-label { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(13px, 2.4vw, 17px); letter-spacing: .06em; color: #2C2C2C; white-space: nowrap; }
+    .s2-headline { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: clamp(22px,4.5vw,32px); line-height: 1.2; color: #2C2C2C; margin-bottom: clamp(24px,4vw,36px); }
+    .spectrum-row { display: flex; align-items: center; margin-bottom: clamp(24px,4vw,36px); position: relative; }
+    .spec-label { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(13px,2.4vw,17px); letter-spacing: .06em; color: #2C2C2C; white-space: nowrap; }
     .arrow-track { flex: 1; margin: 0 14px; position: relative; height: 20px; display: flex; align-items: center; }
     .arrow-dots { width: 100%; border-bottom: 2px dotted #2C2C2C; position: relative; }
     .arrow-dots::after { content: ''; position: absolute; right: -1px; top: 50%; transform: translateY(-50%); width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid #2C2C2C; }
     .strike-line { position: absolute; left: 0; right: 0; height: 2.5px; background: #cc2a2a; top: 50%; transform: translateY(-50%) rotate(-8deg); z-index: 2; border-radius: 2px; }
-    .s2-body { font-family: 'Lato', sans-serif; font-weight: 300; font-size: clamp(11px, 2vw, 14px); line-height: 1.75; color: #4a4a4a; }
+    .s2-body { font-family: 'Lato', sans-serif; font-weight: 300; font-size: clamp(11px,2vw,14px); line-height: 1.75; color: #4a4a4a; }
     .s2-body .bold-line { font-weight: 700; color: #2C2C2C; }
-    .s2 .slide-counter { color: rgba(44,44,44,.3); }
-
-    /* Slide 3 */
     #s3 { background: #2C2C2C; overflow: hidden; }
     .s3-lines { position: absolute; right: -10%; top: 0; bottom: 0; width: 55%; z-index: 1; opacity: .07; }
     .s3-inner { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; padding: var(--pad); z-index: 2; }
-    .s3-word { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: clamp(38px, 8vw, 58px); color: #C9A84C; line-height: 1; margin-bottom: clamp(18px, 3vw, 26px); }
-    .s3-body { font-family: 'Lato', sans-serif; font-weight: 300; font-size: clamp(11px, 1.9vw, 13px); line-height: 1.8; color: rgba(255,255,255,.75); margin-bottom: clamp(20px, 3vw, 28px); max-width: 82%; }
+    .s3-word { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: clamp(38px,8vw,58px); color: #C9A84C; line-height: 1; margin-bottom: clamp(18px,3vw,26px); }
+    .s3-body { font-family: 'Lato', sans-serif; font-weight: 300; font-size: clamp(11px,1.9vw,13px); line-height: 1.8; color: rgba(255,255,255,.75); margin-bottom: clamp(20px,3vw,28px); max-width: 82%; }
     .quote-block-dark { border-left: 2px solid #C9A84C; padding-left: 16px; max-width: 80%; }
-    .quote-block-dark p { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(11px, 1.9vw, 13.5px); line-height: 1.65; color: #F5F0E8; opacity: .8; }
-    .quote-block-dark cite { display: block; margin-top: 6px; font-family: 'Lato', sans-serif; font-weight: 300; font-size: clamp(9px, 1.5vw, 11px); letter-spacing: .1em; color: #C9A84C; opacity: .7; font-style: normal; }
-    .s3 .slide-counter { color: rgba(255,255,255,.25); }
-
-    /* Slide 4 */
+    .quote-block-dark p { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(11px,1.9vw,13.5px); line-height: 1.65; color: #F5F0E8; opacity: .8; }
+    .quote-block-dark cite { display: block; margin-top: 6px; font-family: 'Lato', sans-serif; font-weight: 300; font-size: clamp(9px,1.5vw,11px); letter-spacing: .1em; color: #C9A84C; opacity: .7; font-style: normal; }
     #s4 { background: #F5F0E8; overflow: hidden; }
     .s4-rays { position: absolute; right: -5%; top: -10%; width: 60%; height: 120%; z-index: 1; opacity: .06; }
     .s4-inner { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; padding: var(--pad); z-index: 2; }
-    .s4-word { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: clamp(38px, 8vw, 58px); color: #2D4A3E; line-height: 1; margin-bottom: clamp(18px, 3vw, 26px); }
-    .s4-body { font-family: 'Lato', sans-serif; font-weight: 300; font-size: clamp(11px, 1.9vw, 13px); line-height: 1.8; color: #3a3028; margin-bottom: clamp(20px, 3vw, 28px); max-width: 82%; }
+    .s4-word { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: clamp(38px,8vw,58px); color: #2D4A3E; line-height: 1; margin-bottom: clamp(18px,3vw,26px); }
+    .s4-body { font-family: 'Lato', sans-serif; font-weight: 300; font-size: clamp(11px,1.9vw,13px); line-height: 1.8; color: #3a3028; margin-bottom: clamp(20px,3vw,28px); max-width: 82%; }
     .quote-block-light { border-left: 2px solid #C4622D; padding-left: 16px; max-width: 80%; }
-    .quote-block-light p { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(11px, 1.9vw, 13.5px); line-height: 1.65; color: #C4622D; }
-    .quote-block-light cite { display: block; margin-top: 6px; font-family: 'Lato', sans-serif; font-weight: 300; font-size: clamp(9px, 1.5vw, 11px); letter-spacing: .1em; color: #8a4020; font-style: normal; }
-    .s4 .slide-counter { color: rgba(44,44,44,.3); }
-
-    /* Slide 5 */
+    .quote-block-light p { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(11px,1.9vw,13.5px); line-height: 1.65; color: #C4622D; }
+    .quote-block-light cite { display: block; margin-top: 6px; font-family: 'Lato', sans-serif; font-weight: 300; font-size: clamp(9px,1.5vw,11px); letter-spacing: .1em; color: #8a4020; font-style: normal; }
     #s5 { background: #F5F0E8; }
     .s5-left-half { position: absolute; left: 0; top: 0; bottom: 0; width: 50%; background: #E8E0D0; }
     .s5-divider { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: rgba(44,44,44,.18); }
     #s5::after { content: ''; position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.4' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 1; }
     .s5-inner { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: var(--pad) calc(var(--pad) * .75); z-index: 2; text-align: center; }
-    .s5-headline { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: clamp(16px, 3.2vw, 23px); line-height: 1.3; color: #2C2C2C; margin-bottom: clamp(22px, 3.5vw, 32px); max-width: 88%; }
-    .s5-columns { display: flex; width: 100%; margin-bottom: clamp(22px, 3.5vw, 32px); }
+    .s5-headline { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: clamp(16px,3.2vw,23px); line-height: 1.3; color: #2C2C2C; margin-bottom: clamp(22px,3.5vw,32px); max-width: 88%; }
+    .s5-columns { display: flex; width: 100%; margin-bottom: clamp(22px,3.5vw,32px); }
     .s5-col { flex: 1; text-align: center; }
-    .s5-col-title { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(13px, 2.4vw, 17px); letter-spacing: .12em; text-transform: uppercase; color: #2C2C2C; margin-bottom: 12px; }
-    .s5-col:first-child .s5-col-title { color: #8a3020; }
-    .s5-col:last-child  .s5-col-title { color: #2D4A3E; }
+    .s5-col-title { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(13px,2.4vw,17px); letter-spacing: .12em; text-transform: uppercase; color: #2C2C2C; margin-bottom: 12px; }
+    .s5-col:first-child .s5-col-title { color: #8a3020; } .s5-col:last-child .s5-col-title { color: #2D4A3E; }
     .s5-items { list-style: none; display: flex; flex-direction: column; gap: 5px; }
-    .s5-items li { font-family: 'Lato', sans-serif; font-weight: 300; font-size: clamp(9.5px, 1.7vw, 12px); letter-spacing: .06em; color: #5a5040; text-transform: lowercase; }
-    .s5-closer { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: clamp(12px, 2.2vw, 15.5px); line-height: 1.45; color: #2C2C2C; border-top: 1px solid rgba(44,44,44,.15); padding-top: clamp(16px, 2.5vw, 22px); width: 100%; text-align: center; }
-    .s5 .slide-counter { color: rgba(44,44,44,.3); }
+    .s5-items li { font-family: 'Lato', sans-serif; font-weight: 300; font-size: clamp(9.5px,1.7vw,12px); letter-spacing: .06em; color: #5a5040; text-transform: lowercase; }
+    .s5-closer { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: clamp(12px,2.2vw,15.5px); line-height: 1.45; color: #2C2C2C; border-top: 1px solid rgba(44,44,44,.15); padding-top: clamp(16px,2.5vw,22px); width: 100%; text-align: center; }
   </style>
 </head>
 <body>
-
-<div class="export-overlay" id="exportOverlay">
-  <div class="spinner"></div>
-  <span id="exportMsg">Rendering slide…</span>
-</div>
+<div class="export-overlay" id="exportOverlay"><div class="spinner"></div><span id="exportMsg">Rendering slide…</span></div>
 
 <div class="viewport" id="carousel">
-  <button class="nav prev" id="prevBtn" aria-label="Previous slide">
-    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-  </button>
-
+  <button class="nav prev" id="prevBtn" aria-label="Previous slide"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
   <div class="track" id="track">
 
     <div class="slide" id="s1">
@@ -360,60 +115,43 @@
         <p class="s1-quote">&ldquo;I wrote this before I read it in Siddhartha.<br/>Then I found the same idea &mdash;<br/>while not looking for it.&rdquo;</p>
         <span class="s1-sub">Hermann Hesse knew it too.</span>
       </div>
-      <label class="photo-picker-label" for="photoInput">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        <span id="photoPickerText">Set photo</span>
-      </label>
+      <label class="photo-picker-label" for="photoInput"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span id="photoPickerText">Set photo</span></label>
       <input type="file" id="photoInput" accept="image/*" />
       <div class="swipe-hint">swipe <svg viewBox="0 0 18 10"><line x1="0" y1="5" x2="14" y2="5"/><polyline points="9 1 14 5 9 9"/></svg></div>
       <span class="slide-counter" style="color:rgba(255,255,255,.3)">1 / 5</span>
+      <span class="slide-handle">@gilkfir</span>
     </div>
 
     <div class="slide" id="s2">
       <div class="s2-inner">
         <h2 class="s2-headline">We think they&rsquo;re on<br/>the same spectrum.</h2>
-        <div class="spectrum-row">
-          <span class="spec-label">Search</span>
-          <div class="arrow-track"><div class="arrow-dots"></div><div class="strike-line"></div></div>
-          <span class="spec-label">Find</span>
-        </div>
+        <div class="spectrum-row"><span class="spec-label">Search</span><div class="arrow-track"><div class="arrow-dots"></div><div class="strike-line"></div></div><span class="spec-label">Find</span></div>
         <p class="s2-body">We believe searching leads to finding.<br/>That if you search hard enough &mdash; you will find.<br/><span class="bold-line">This is the mistake.</span></p>
       </div>
       <span class="slide-counter" style="color:rgba(44,44,44,.3)">2 / 5</span>
+      <span class="slide-handle">@gilkfir</span>
     </div>
 
     <div class="slide" id="s3">
-      <svg class="s3-lines" viewBox="0 0 300 600" preserveAspectRatio="none" aria-hidden="true">
-        <g stroke="white" stroke-width="1" fill="none">
-          <line x1="300" y1="300" x2="0" y2="0"/><line x1="300" y1="300" x2="30" y2="0"/><line x1="300" y1="300" x2="60" y2="0"/><line x1="300" y1="300" x2="90" y2="0"/><line x1="300" y1="300" x2="120" y2="0"/><line x1="300" y1="300" x2="150" y2="0"/><line x1="300" y1="300" x2="180" y2="0"/><line x1="300" y1="300" x2="210" y2="0"/><line x1="300" y1="300" x2="240" y2="0"/><line x1="300" y1="300" x2="270" y2="0"/><line x1="300" y1="300" x2="300" y2="0"/><line x1="300" y1="300" x2="0" y2="600"/><line x1="300" y1="300" x2="30" y2="600"/><line x1="300" y1="300" x2="60" y2="600"/><line x1="300" y1="300" x2="90" y2="600"/><line x1="300" y1="300" x2="120" y2="600"/><line x1="300" y1="300" x2="150" y2="600"/><line x1="300" y1="300" x2="180" y2="600"/><line x1="300" y1="300" x2="210" y2="600"/><line x1="300" y1="300" x2="240" y2="600"/><line x1="300" y1="300" x2="270" y2="600"/><line x1="300" y1="300" x2="300" y2="600"/>
-        </g>
-      </svg>
+      <svg class="s3-lines" viewBox="0 0 300 600" preserveAspectRatio="none" aria-hidden="true"><g stroke="white" stroke-width="1" fill="none"><line x1="300" y1="300" x2="0" y2="0"/><line x1="300" y1="300" x2="30" y2="0"/><line x1="300" y1="300" x2="60" y2="0"/><line x1="300" y1="300" x2="90" y2="0"/><line x1="300" y1="300" x2="120" y2="0"/><line x1="300" y1="300" x2="150" y2="0"/><line x1="300" y1="300" x2="180" y2="0"/><line x1="300" y1="300" x2="210" y2="0"/><line x1="300" y1="300" x2="240" y2="0"/><line x1="300" y1="300" x2="270" y2="0"/><line x1="300" y1="300" x2="300" y2="0"/><line x1="300" y1="300" x2="0" y2="600"/><line x1="300" y1="300" x2="30" y2="600"/><line x1="300" y1="300" x2="60" y2="600"/><line x1="300" y1="300" x2="90" y2="600"/><line x1="300" y1="300" x2="120" y2="600"/><line x1="300" y1="300" x2="150" y2="600"/><line x1="300" y1="300" x2="180" y2="600"/><line x1="300" y1="300" x2="210" y2="600"/><line x1="300" y1="300" x2="240" y2="600"/><line x1="300" y1="300" x2="270" y2="600"/><line x1="300" y1="300" x2="300" y2="600"/></g></svg>
       <div class="s3-inner">
         <h2 class="s3-word">Searching</h2>
         <p class="s3-body">When you search, you activate a filter &mdash; your mind narrows to match what it already expects to find. You see only confirmations. You absorb nothing new. Searching tightens perception. It makes you less receptive, not more.</p>
-        <blockquote class="quote-block-dark">
-          <p>&ldquo;It happens quite easily that he only sees the thing that he is seeking.&rdquo;</p>
-          <cite>&mdash; Siddhartha, Hermann Hesse</cite>
-        </blockquote>
+        <blockquote class="quote-block-dark"><p>&ldquo;It happens quite easily that he only sees the thing that he is seeking.&rdquo;</p><cite>&mdash; Siddhartha, Hermann Hesse</cite></blockquote>
       </div>
       <span class="slide-counter" style="color:rgba(255,255,255,.25)">3 / 5</span>
+      <span class="slide-handle">@gilkfir</span>
     </div>
 
     <div class="slide" id="s4">
-      <svg class="s4-rays" viewBox="0 0 300 600" preserveAspectRatio="none" aria-hidden="true">
-        <g stroke="#2D4A3E" stroke-width="1" fill="none">
-          <line x1="0" y1="300" x2="300" y2="0"/><line x1="0" y1="300" x2="300" y2="30"/><line x1="0" y1="300" x2="300" y2="60"/><line x1="0" y1="300" x2="300" y2="90"/><line x1="0" y1="300" x2="300" y2="120"/><line x1="0" y1="300" x2="300" y2="150"/><line x1="0" y1="300" x2="300" y2="180"/><line x1="0" y1="300" x2="300" y2="210"/><line x1="0" y1="300" x2="300" y2="240"/><line x1="0" y1="300" x2="300" y2="270"/><line x1="0" y1="300" x2="300" y2="300"/><line x1="0" y1="300" x2="300" y2="330"/><line x1="0" y1="300" x2="300" y2="360"/><line x1="0" y1="300" x2="300" y2="390"/><line x1="0" y1="300" x2="300" y2="420"/><line x1="0" y1="300" x2="300" y2="450"/><line x1="0" y1="300" x2="300" y2="480"/><line x1="0" y1="300" x2="300" y2="510"/><line x1="0" y1="300" x2="300" y2="540"/><line x1="0" y1="300" x2="300" y2="570"/><line x1="0" y1="300" x2="300" y2="600"/>
-        </g>
-      </svg>
+      <svg class="s4-rays" viewBox="0 0 300 600" preserveAspectRatio="none" aria-hidden="true"><g stroke="#2D4A3E" stroke-width="1" fill="none"><line x1="0" y1="300" x2="300" y2="0"/><line x1="0" y1="300" x2="300" y2="30"/><line x1="0" y1="300" x2="300" y2="60"/><line x1="0" y1="300" x2="300" y2="90"/><line x1="0" y1="300" x2="300" y2="120"/><line x1="0" y1="300" x2="300" y2="150"/><line x1="0" y1="300" x2="300" y2="180"/><line x1="0" y1="300" x2="300" y2="210"/><line x1="0" y1="300" x2="300" y2="240"/><line x1="0" y1="300" x2="300" y2="270"/><line x1="0" y1="300" x2="300" y2="300"/><line x1="0" y1="300" x2="300" y2="330"/><line x1="0" y1="300" x2="300" y2="360"/><line x1="0" y1="300" x2="300" y2="390"/><line x1="0" y1="300" x2="300" y2="420"/><line x1="0" y1="300" x2="300" y2="450"/><line x1="0" y1="300" x2="300" y2="480"/><line x1="0" y1="300" x2="300" y2="510"/><line x1="0" y1="300" x2="300" y2="540"/><line x1="0" y1="300" x2="300" y2="570"/><line x1="0" y1="300" x2="300" y2="600"/></g></svg>
       <div class="s4-inner">
         <h2 class="s4-word">Finding</h2>
         <p class="s4-body">Finding is a different state entirely. To find, you must be open &mdash; not looking for something specific. Finding happens when you release the goal. It expands perception. It lets reality surprise you.</p>
-        <blockquote class="quote-block-light">
-          <p>&ldquo;Finding means: to be free, to be receptive, to have no goal.&rdquo;</p>
-          <cite>&mdash; Siddhartha, Hermann Hesse</cite>
-        </blockquote>
+        <blockquote class="quote-block-light"><p>&ldquo;Finding means: to be free, to be receptive, to have no goal.&rdquo;</p><cite>&mdash; Siddhartha, Hermann Hesse</cite></blockquote>
       </div>
       <span class="slide-counter" style="color:rgba(44,44,44,.3)">4 / 5</span>
+      <span class="slide-handle">@gilkfir</span>
     </div>
 
     <div class="slide" id="s5">
@@ -428,21 +166,21 @@
         <p class="s5-closer">You don&rsquo;t find by searching harder.<br/>You find by learning when to stop searching.</p>
       </div>
       <span class="slide-counter" style="color:rgba(44,44,44,.3)">5 / 5</span>
+      <span class="slide-handle">@gilkfir</span>
+      <div class="ig-actions">
+        <div class="ig-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+        <div class="ig-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <div class="ig-icon"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div>
+        <div class="ig-icon ig-save"><svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></div>
+      </div>
     </div>
 
   </div>
-
-  <button class="nav next" id="nextBtn" aria-label="Next slide">
-    <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-  </button>
+  <button class="nav next" id="nextBtn" aria-label="Next slide"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
 </div>
 
 <div class="counter-bar">
-  <div class="dot active" data-i="0"></div>
-  <div class="dot" data-i="1"></div>
-  <div class="dot" data-i="2"></div>
-  <div class="dot" data-i="3"></div>
-  <div class="dot" data-i="4"></div>
+  <div class="dot active" data-i="0"></div><div class="dot" data-i="1"></div><div class="dot" data-i="2"></div><div class="dot" data-i="3"></div><div class="dot" data-i="4"></div>
   <span class="counter-label" id="counterLabel">1 / 5</span>
 </div>
 
@@ -458,104 +196,18 @@
 </div>
 
 <script>
-  const track   = document.getElementById('track');
-  const prevBtn = document.getElementById('prevBtn');
-  const nextBtn = document.getElementById('nextBtn');
-  const dots    = document.querySelectorAll('.dot');
-  const label   = document.getElementById('counterLabel');
-  const total   = 5;
-  let current   = 0;
-
-  function goTo(n) {
-    current = (n + total) % total;
-    track.style.transform = `translateX(-${current * 20}%)`;
-    dots.forEach((d, i) => d.classList.toggle('active', i === current));
-    label.textContent = `${current + 1} / ${total}`;
-    prevBtn.style.opacity = current === 0 ? '0' : '1';
-    nextBtn.style.opacity = current === total - 1 ? '0' : '1';
-  }
-
-  prevBtn.addEventListener('click', () => goTo(current - 1));
-  nextBtn.addEventListener('click', () => goTo(current + 1));
-  dots.forEach(d => d.addEventListener('click', () => goTo(+d.dataset.i)));
-  document.addEventListener('keydown', e => { if (e.key === 'ArrowRight') goTo(current + 1); if (e.key === 'ArrowLeft') goTo(current - 1); });
-
-  let startX = 0;
-  const vp = document.getElementById('carousel');
-  vp.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
-  vp.addEventListener('touchend',   e => { const dx = e.changedTouches[0].clientX - startX; if (Math.abs(dx) > 40) goTo(current + (dx < 0 ? 1 : -1)); });
-
+  const track=document.getElementById('track'),prevBtn=document.getElementById('prevBtn'),nextBtn=document.getElementById('nextBtn'),dots=document.querySelectorAll('.dot'),label=document.getElementById('counterLabel');const total=5;let current=0;
+  function goTo(n){current=(n+total)%total;track.style.transform=`translateX(-${current*20}%)`;dots.forEach((d,i)=>d.classList.toggle('active',i===current));label.textContent=`${current+1} / ${total}`;prevBtn.style.opacity=current===0?'0':'1';nextBtn.style.opacity=current===total-1?'0':'1';}
+  prevBtn.addEventListener('click',()=>goTo(current-1));nextBtn.addEventListener('click',()=>goTo(current+1));dots.forEach(d=>d.addEventListener('click',()=>goTo(+d.dataset.i)));
+  document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')goTo(current+1);if(e.key==='ArrowLeft')goTo(current-1);});
+  let startX=0;const vp=document.getElementById('carousel');vp.addEventListener('touchstart',e=>{startX=e.touches[0].clientX;},{passive:true});vp.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-startX;if(Math.abs(dx)>40)goTo(current+(dx<0?1:-1));});
   goTo(0);
-
-  // Photo picker
-  const photoInput = document.getElementById('photoInput');
-  const s1El       = document.getElementById('s1');
-  const s1PhotoEl  = document.getElementById('s1Photo');
-  const pickerText = document.getElementById('photoPickerText');
-
-  function applyPhoto(dataUrl) {
-    s1PhotoEl.style.backgroundImage = `url(${dataUrl})`;
-    s1El.classList.add('has-photo');
-    pickerText.textContent = 'Change photo';
-    try { localStorage.setItem('slide1photo', dataUrl); } catch(e) {}
-  }
-
-  try { const saved = localStorage.getItem('slide1photo'); if (saved) applyPhoto(saved); } catch(e) {}
-
-  photoInput.addEventListener('change', e => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => applyPhoto(ev.target.result);
-    reader.readAsDataURL(file);
-  });
-
-  // Export
-  const slides    = document.querySelectorAll('.slide');
-  const overlay   = document.getElementById('exportOverlay');
-  const exportMsg = document.getElementById('exportMsg');
-  const dlBtns    = document.querySelectorAll('.dl-btn');
-  const OUTPUT_PX = 1080;
-
-  async function exportSlide(idx) {
-    const btn = dlBtns[idx];
-    btn.classList.add('loading');
-    overlay.classList.add('visible');
-    exportMsg.textContent = `Rendering slide ${idx + 1} of 5…`;
-
-    const prevTransition = track.style.transition;
-    track.style.transition = 'none';
-    track.style.transform  = `translateX(-${idx * 20}%)`;
-
-    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-
-    const slideEl = slides[idx];
-    const size    = slideEl.getBoundingClientRect().width;
-    const scale   = OUTPUT_PX / size;
-
-    try {
-      const hideEls = slideEl.querySelectorAll('.photo-picker-label, .swipe-hint, .slide-counter');
-      hideEls.forEach(el => { el.dataset.prevVis = el.style.visibility; el.style.visibility = 'hidden'; });
-
-      const canvas = await html2canvas(slideEl, {
-        scale, useCORS: true, allowTaint: true, backgroundColor: null, logging: false, width: size, height: size,
-      });
-
-      hideEls.forEach(el => { el.style.visibility = el.dataset.prevVis || ''; });
-
-      const link = document.createElement('a');
-      link.download = `carousel-slide-${idx + 1}.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-    } catch(err) {
-      alert('Export failed: ' + err.message);
-    }
-
-    track.style.transition = prevTransition;
-    track.style.transform  = `translateX(-${current * 20}%)`;
-    overlay.classList.remove('visible');
-    btn.classList.remove('loading');
-  }
+  const photoInput=document.getElementById('photoInput'),s1El=document.getElementById('s1'),s1PhotoEl=document.getElementById('s1Photo'),pickerText=document.getElementById('photoPickerText');
+  function applyPhoto(dataUrl){s1PhotoEl.style.backgroundImage=`url(${dataUrl})`;s1El.classList.add('has-photo');pickerText.textContent='Change photo';try{localStorage.setItem('slide1photo',dataUrl);}catch(e){}}
+  try{const saved=localStorage.getItem('slide1photo');if(saved)applyPhoto(saved);}catch(e){}
+  photoInput.addEventListener('change',e=>{const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>applyPhoto(ev.target.result);reader.readAsDataURL(file);});
+  const slides=document.querySelectorAll('.slide'),overlay=document.getElementById('exportOverlay'),exportMsg=document.getElementById('exportMsg'),dlBtns=document.querySelectorAll('.dl-btn'),OUTPUT_PX=1080;
+  async function exportSlide(idx){const btn=dlBtns[idx];btn.classList.add('loading');overlay.classList.add('visible');exportMsg.textContent=`Rendering slide ${idx+1} of 5…`;const prevTransition=track.style.transition;track.style.transition='none';track.style.transform=`translateX(-${idx*20}%)`;await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));const slideEl=slides[idx];const size=slideEl.getBoundingClientRect().width;const scale=OUTPUT_PX/size;try{const hideEls=slideEl.querySelectorAll('.photo-picker-label, .swipe-hint, .slide-counter');hideEls.forEach(el=>{el.dataset.prevVis=el.style.visibility;el.style.visibility='hidden';});const canvas=await html2canvas(slideEl,{scale,useCORS:true,allowTaint:true,backgroundColor:null,logging:false,width:size,height:size});hideEls.forEach(el=>{el.style.visibility=el.dataset.prevVis||'';});const link=document.createElement('a');link.download=`carousel-slide-${idx+1}.png`;link.href=canvas.toDataURL('image/png');link.click();}catch(err){alert('Export failed: '+err.message);}track.style.transition=prevTransition;track.style.transform=`translateX(-${current*20}%)`;overlay.classList.remove('visible');btn.classList.remove('loading');}
 </script>
 </body>
 </html>
