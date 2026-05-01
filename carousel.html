@@ -121,6 +121,75 @@
       white-space: nowrap;
     }
 
+    /* ── @handle watermark (all slides) ── */
+    .slide-handle {
+      position: absolute;
+      bottom: 22px;
+      right: var(--pad);
+      font-family: 'Lato', sans-serif;
+      font-weight: 300;
+      font-size: clamp(9px, 1.6vw, 11px);
+      letter-spacing: .12em;
+      z-index: 10;
+      white-space: nowrap;
+    }
+    #s1 .slide-handle, #s3 .slide-handle { color: rgba(255,255,255,.38); }
+    #s2 .slide-handle, #s4 .slide-handle { color: rgba(44,44,44,.32); }
+    #s5 .slide-handle { color: rgba(44,44,44,.32); bottom: 48px; }
+
+    /* ── Instagram action bar (slide 5 only) ── */
+    .ig-actions {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      border-top: 1px solid rgba(44,44,44,.1);
+      background: rgba(245,240,232,.88);
+      backdrop-filter: blur(4px);
+      z-index: 11;
+      gap: 18px;
+    }
+    .ig-actions .ig-icon {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: #2C2C2C;
+    }
+    .ig-actions .ig-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: #2C2C2C;
+      fill: none;
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .ig-actions .ig-icon span {
+      font-family: 'Lato', sans-serif;
+      font-weight: 400;
+      font-size: clamp(9px, 1.5vw, 11px);
+      letter-spacing: .04em;
+      color: #2C2C2C;
+    }
+    .ig-actions .ig-save {
+      margin-left: auto;
+    }
+    .ig-cta {
+      position: absolute;
+      bottom: 48px;
+      left: 0; right: 0;
+      text-align: center;
+      font-family: 'Lato', sans-serif;
+      font-weight: 300;
+      font-size: clamp(8px, 1.4vw, 10px);
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(44,44,44,.38);
+      z-index: 11;
+    }
+
     /* ══════════════════════════════════════
        EXPORT PANEL
     ══════════════════════════════════════ */
@@ -640,6 +709,7 @@
         </svg>
       </div>
       <span class="slide-counter" style="color:rgba(255,255,255,.3)">1 / 5</span>
+      <span class="slide-handle">@gilkfir</span>
     </div>
 
     <!-- ════ SLIDE 2 ════ -->
@@ -661,6 +731,7 @@
         </p>
       </div>
       <span class="slide-counter" style="color:rgba(44,44,44,.3)">2 / 5</span>
+      <span class="slide-handle">@gilkfir</span>
     </div>
 
     <!-- ════ SLIDE 3 ════ -->
@@ -705,6 +776,7 @@
         </blockquote>
       </div>
       <span class="slide-counter" style="color:rgba(255,255,255,.25)">3 / 5</span>
+      <span class="slide-handle">@gilkfir</span>
     </div>
 
     <!-- ════ SLIDE 4 ════ -->
@@ -747,6 +819,7 @@
         </blockquote>
       </div>
       <span class="slide-counter" style="color:rgba(44,44,44,.3)">4 / 5</span>
+      <span class="slide-handle">@gilkfir</span>
     </div>
 
     <!-- ════ SLIDE 5 ════ -->
@@ -781,6 +854,35 @@
         </p>
       </div>
       <span class="slide-counter" style="color:rgba(44,44,44,.3)">5 / 5</span>
+      <span class="slide-handle">@gilkfir</span>
+      <!-- Instagram-style engagement bar -->
+      <div class="ig-actions">
+        <!-- Like -->
+        <div class="ig-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </div>
+        <!-- Comment -->
+        <div class="ig-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <!-- Share / Send -->
+        <div class="ig-icon">
+          <svg viewBox="0 0 24 24">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </div>
+        <!-- Save (bookmark) — pushed to right -->
+        <div class="ig-icon ig-save">
+          <svg viewBox="0 0 24 24">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+      </div>
     </div>
 
   </div><!-- /track -->
