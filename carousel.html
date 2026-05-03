@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- no external export library needed -->
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -191,7 +191,7 @@
     }
 
     /* ══════════════════════════════════════
-       EXPORT PANEL
+       EXPORT PANEL (screenshot mode)
     ══════════════════════════════════════ */
     .export-panel {
       margin-top: 28px;
@@ -234,33 +234,71 @@
     }
     .dl-btn:hover, .dl-btn:active { background: rgba(255,255,255,.18); color: #fff; }
     .dl-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-    .dl-btn.loading { opacity: .5; pointer-events: none; }
 
-    /* export progress overlay */
-    .export-overlay {
+    /* ── Screenshot mode bar (fixed top) ── */
+    .ss-bar {
       display: none;
       position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.7);
-      z-index: 200;
+      top: 0; left: 0; right: 0;
+      height: 56px;
+      background: #111;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      z-index: 500;
       align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 12px;
-      color: #fff;
+      justify-content: space-between;
+      padding: 0 18px;
+    }
+    body.ss-mode .ss-bar { display: flex; }
+    .ss-label {
       font-family: 'Lato', sans-serif;
-      font-size: 13px;
-      letter-spacing: .1em;
+      font-weight: 300;
+      font-size: 12px;
+      letter-spacing: .12em;
+      color: rgba(255,255,255,.65);
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .export-overlay.visible { display: flex; }
-    .spinner {
-      width: 32px; height: 32px;
-      border: 2px solid rgba(255,255,255,.2);
-      border-top-color: var(--gold);
-      border-radius: 50%;
-      animation: spin .8s linear infinite;
+    .ss-label strong { color: #fff; font-weight: 400; }
+    .ss-done {
+      background: var(--gold);
+      color: #1a1a1a;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 20px;
+      font-family: 'Lato', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Screenshot mode: viewport goes fullscreen ── */
+    body.ss-mode {
+      overflow: hidden;
+      padding: 0;
+      justify-content: flex-start;
+    }
+    body.ss-mode .counter-bar,
+    body.ss-mode .export-panel { display: none !important; }
+    body.ss-mode .viewport {
+      position: fixed !important;
+      top: 56px !important;
+      left: 0 !important;
+      width: 100vw !important;
+      height: 100vw !important;
+      max-width: none !important;
+      margin: 0 !important;
+      box-shadow: none !important;
+      border-radius: 0;
+    }
+    body.ss-mode .nav { display: none !important; }
+
+    /* pulse ring on screenshot hint */
+    @keyframes pulse { 0%,100%{opacity:.6} 50%{opacity:1} }
+    .ss-label .camera { animation: pulse 2s ease-in-out infinite; font-size: 16px; }
 
     /* ══════════════════════════════════════
        SLIDE 1 — Dark photo-style
@@ -668,10 +706,13 @@
 </head>
 <body>
 
-<!-- export progress overlay -->
-<div class="export-overlay" id="exportOverlay">
-  <div class="spinner"></div>
-  <span id="exportMsg">Rendering slide…</span>
+<!-- Screenshot mode bar -->
+<div class="ss-bar">
+  <div class="ss-label">
+    <span class="camera">📷</span>
+    Screenshot now &nbsp;·&nbsp; <strong id="ssSlideLabel">Slide 1 of 5</strong>
+  </div>
+  <button class="ss-done" onclick="exitScreenshot()">✓ Done</button>
 </div>
 
 <!-- ─────────────── CAROUSEL ─────────────── -->
@@ -849,7 +890,7 @@
         </div>
         <p class="s5-closer">
           You don&rsquo;t find by searching harder.<br/>
-          You find by learning when to stop searching.
+          You find by letting go of the search and opening up to what is.
         </p>
       </div>
       <span class="slide-counter" style="color:rgba(44,44,44,.3)">5 / 5</span>
@@ -902,28 +943,28 @@
   <span class="counter-label" id="counterLabel">1 / 5</span>
 </div>
 
-<!-- ── Export panel ── -->
+<!-- ── Screenshot panel ── -->
 <div class="export-panel">
-  <div class="export-title">Save slides as images &rarr; upload to Instagram</div>
+  <div class="export-title">Tap a slide → screenshot it → save to Photos → upload to Instagram</div>
   <div class="export-buttons">
-    <button class="dl-btn" onclick="exportSlide(0)">
-      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    <button class="dl-btn" onclick="enterScreenshot(0)">
+      <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 2H8l-2 4h12z"/><circle cx="12" cy="13" r="3"/></svg>
       Slide 1
     </button>
-    <button class="dl-btn" onclick="exportSlide(1)">
-      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    <button class="dl-btn" onclick="enterScreenshot(1)">
+      <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 2H8l-2 4h12z"/><circle cx="12" cy="13" r="3"/></svg>
       Slide 2
     </button>
-    <button class="dl-btn" onclick="exportSlide(2)">
-      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    <button class="dl-btn" onclick="enterScreenshot(2)">
+      <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 2H8l-2 4h12z"/><circle cx="12" cy="13" r="3"/></svg>
       Slide 3
     </button>
-    <button class="dl-btn" onclick="exportSlide(3)">
-      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    <button class="dl-btn" onclick="enterScreenshot(3)">
+      <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 2H8l-2 4h12z"/><circle cx="12" cy="13" r="3"/></svg>
       Slide 4
     </button>
-    <button class="dl-btn" onclick="exportSlide(4)">
-      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    <button class="dl-btn" onclick="enterScreenshot(4)">
+      <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 2H8l-2 4h12z"/><circle cx="12" cy="13" r="3"/></svg>
       Slide 5
     </button>
   </div>
@@ -994,60 +1035,18 @@
     reader.readAsDataURL(file);
   });
 
-  /* ─── Export / download ─── */
-  const slides     = document.querySelectorAll('.slide');
-  const overlay    = document.getElementById('exportOverlay');
-  const exportMsg  = document.getElementById('exportMsg');
-  const dlBtns     = document.querySelectorAll('.dl-btn');
-  const OUTPUT_PX  = 1080;
+  /* ─── Screenshot mode ─── */
+  const ssLabel = document.getElementById('ssSlideLabel');
 
-  async function exportSlide(idx) {
-    const btn = dlBtns[idx];
-    btn.classList.add('loading');
-    overlay.classList.add('visible');
-    exportMsg.textContent = `Rendering slide ${idx + 1} of 5…`;
+  function enterScreenshot(idx) {
+    goTo(idx);
+    ssLabel.textContent = `Slide ${idx + 1} of 5`;
+    window.scrollTo(0, 0);
+    document.body.classList.add('ss-mode');
+  }
 
-    /* temporarily show target slide without transition */
-    const prevTransition = track.style.transition;
-    track.style.transition = 'none';
-    track.style.transform = `translateX(-${idx * 20}%)`;
-
-    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-
-    const slideEl = slides[idx];
-    const size    = slideEl.getBoundingClientRect().width;
-    const scale   = OUTPUT_PX / size;
-
-    try {
-      /* hide UI chrome that shouldn't appear in export */
-      const hideEls = slideEl.querySelectorAll('.photo-picker-label, .swipe-hint, .slide-counter');
-      hideEls.forEach(el => { el.dataset.prevVis = el.style.visibility; el.style.visibility = 'hidden'; });
-
-      const canvas = await html2canvas(slideEl, {
-        scale,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: null,
-        logging: false,
-        width:  size,
-        height: size,
-      });
-
-      hideEls.forEach(el => { el.style.visibility = el.dataset.prevVis || ''; });
-
-      const link = document.createElement('a');
-      link.download = `carousel-slide-${idx + 1}.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-    } catch(err) {
-      alert('Export failed: ' + err.message);
-    }
-
-    /* restore */
-    track.style.transition = prevTransition;
-    track.style.transform  = `translateX(-${current * 20}%)`;
-    overlay.classList.remove('visible');
-    btn.classList.remove('loading');
+  function exitScreenshot() {
+    document.body.classList.remove('ss-mode');
   }
 </script>
 </body>
