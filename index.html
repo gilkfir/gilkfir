@@ -7,7 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
-  <!-- no external export library needed -->
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -33,7 +32,6 @@
       padding: 20px 0 40px;
     }
 
-    /* ── Viewport wrapper ── */
     .viewport {
       position: relative;
       width: min(540px, 90vw);
@@ -42,7 +40,6 @@
       box-shadow: 0 24px 80px rgba(0,0,0,.55);
     }
 
-    /* ── Slide track ── */
     .track {
       display: flex;
       width: 500%;
@@ -58,7 +55,6 @@
       overflow: hidden;
     }
 
-    /* ── Navigation arrows ── */
     .nav {
       position: absolute;
       top: 50%;
@@ -83,7 +79,6 @@
     .nav.next { right: -20px; }
     .nav svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
-    /* ── Counter + dots ── */
     .counter-bar {
       margin-top: 18px;
       display: flex;
@@ -107,7 +102,6 @@
       margin-left: 6px;
     }
 
-    /* ── Slide inner counter ── */
     .slide-counter {
       position: absolute;
       bottom: 22px;
@@ -121,7 +115,6 @@
       white-space: nowrap;
     }
 
-    /* ── @handle watermark (all slides) ── */
     .slide-handle {
       position: absolute;
       bottom: 22px;
@@ -137,7 +130,6 @@
     #s2 .slide-handle, #s4 .slide-handle { color: rgba(44,44,44,.32); }
     #s5 .slide-handle { color: rgba(44,44,44,.32); bottom: 48px; }
 
-    /* ── Instagram action bar (slide 5 only) ── */
     .ig-actions {
       position: absolute;
       bottom: 0; left: 0; right: 0;
@@ -154,45 +146,18 @@
     .ig-actions .ig-icon {
       display: flex;
       align-items: center;
-      gap: 5px;
       color: #2C2C2C;
     }
     .ig-actions .ig-icon svg {
-      width: 22px;
-      height: 22px;
+      width: 22px; height: 22px;
       stroke: #2C2C2C;
       fill: none;
       stroke-width: 1.6;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
-    .ig-actions .ig-icon span {
-      font-family: 'Lato', sans-serif;
-      font-weight: 400;
-      font-size: clamp(9px, 1.5vw, 11px);
-      letter-spacing: .04em;
-      color: #2C2C2C;
-    }
-    .ig-actions .ig-save {
-      margin-left: auto;
-    }
-    .ig-cta {
-      position: absolute;
-      bottom: 48px;
-      left: 0; right: 0;
-      text-align: center;
-      font-family: 'Lato', sans-serif;
-      font-weight: 300;
-      font-size: clamp(8px, 1.4vw, 10px);
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      color: rgba(44,44,44,.38);
-      z-index: 11;
-    }
+    .ig-actions .ig-save { margin-left: auto; }
 
-    /* ══════════════════════════════════════
-       EXPORT PANEL (screenshot mode)
-    ══════════════════════════════════════ */
     .export-panel {
       margin-top: 28px;
       width: min(540px, 90vw);
@@ -235,7 +200,6 @@
     .dl-btn:hover, .dl-btn:active { background: rgba(255,255,255,.18); color: #fff; }
     .dl-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-    /* ── Screenshot mode bar (fixed top) ── */
     .ss-bar {
       display: none;
       position: fixed;
@@ -261,7 +225,7 @@
     }
     .ss-label strong { color: #fff; font-weight: 400; }
     .ss-done {
-      background: var(--gold);
+      background: #C9A84C;
       color: #1a1a1a;
       border: none;
       border-radius: 20px;
@@ -275,7 +239,6 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* ── Screenshot mode: viewport goes fullscreen ── */
     body.ss-mode {
       overflow: hidden;
       padding: 0;
@@ -296,16 +259,11 @@
     }
     body.ss-mode .nav { display: none !important; }
     body.ss-mode .photo-picker-label,
-    body.ss-mode .swipe-hint,
     body.ss-mode .slide-counter { display: none !important; }
 
-    /* pulse ring on screenshot hint */
     @keyframes pulse { 0%,100%{opacity:.6} 50%{opacity:1} }
     .ss-label .camera { animation: pulse 2s ease-in-out infinite; font-size: 16px; }
 
-    /* ══════════════════════════════════════
-       SLIDE 1 — Dark photo-style
-    ══════════════════════════════════════ */
     #s1 {
       background: linear-gradient(160deg,#1a1a1a 0%,#2a2218 35%,#1e1a12 65%,#0e0d0b 100%);
     }
@@ -316,23 +274,13 @@
         radial-gradient(ellipse 80% 60% at 60% 40%, rgba(201,168,76,.07) 0%, transparent 70%),
         radial-gradient(ellipse 50% 70% at 20% 80%, rgba(45,74,62,.15) 0%, transparent 60%);
     }
-    #s1::after {
-      content: '';
-      position: absolute; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
-      opacity: .5;
-      pointer-events: none;
-    }
 
-    /* Photo layer sits behind text */
     .s1-photo {
       position: absolute; inset: 0;
       background-size: cover;
       background-position: center;
       z-index: 1;
-      transition: opacity .3s;
     }
-    /* dark overlay on top of photo */
     .s1-photo-overlay {
       position: absolute; inset: 0;
       background: linear-gradient(to bottom, rgba(10,8,6,.52) 0%, rgba(10,8,6,.68) 100%);
@@ -370,7 +318,6 @@
       color: rgba(255,255,255,.55);
     }
 
-    /* Photo picker tap target */
     .photo-picker-label {
       position: absolute;
       bottom: 52px;
@@ -416,12 +363,8 @@
       z-index: 3;
     }
     .swipe-hint svg { width: 18px; height: 10px; stroke: currentColor; fill: none; stroke-width: 1.5; }
-    .s1 .slide-counter { color: rgba(255,255,255,.3); }
 
-    /* ══════════════════════════════════════
-       SLIDE 2
-    ══════════════════════════════════════ */
-    #s2 { background: var(--cream); }
+    #s2 { background: #F5F0E8; }
     .s2-inner {
       position: absolute; inset: 0;
       display: flex;
@@ -435,7 +378,7 @@
       font-weight: 700;
       font-size: clamp(22px, 4.5vw, 32px);
       line-height: 1.2;
-      color: var(--charcoal);
+      color: #2C2C2C;
       margin-bottom: clamp(24px, 4vw, 36px);
     }
     .spectrum-row {
@@ -449,7 +392,7 @@
       font-weight: 600;
       font-size: clamp(13px, 2.4vw, 17px);
       letter-spacing: .06em;
-      color: var(--charcoal);
+      color: #2C2C2C;
       white-space: nowrap;
     }
     .arrow-track {
@@ -462,7 +405,7 @@
     }
     .arrow-dots {
       width: 100%;
-      border-bottom: 2px dotted var(--charcoal);
+      border-bottom: 2px dotted #2C2C2C;
       position: relative;
     }
     .arrow-dots::after {
@@ -474,7 +417,7 @@
       width: 0; height: 0;
       border-top: 5px solid transparent;
       border-bottom: 5px solid transparent;
-      border-left: 7px solid var(--charcoal);
+      border-left: 7px solid #2C2C2C;
     }
     .strike-line {
       position: absolute;
@@ -493,13 +436,9 @@
       line-height: 1.75;
       color: #4a4a4a;
     }
-    .s2-body .bold-line { font-weight: 700; color: var(--charcoal); }
-    .s2 .slide-counter { color: rgba(44,44,44,.3); }
+    .s2-body .bold-line { font-weight: 700; color: #2C2C2C; }
 
-    /* ══════════════════════════════════════
-       SLIDE 3
-    ══════════════════════════════════════ */
-    #s3 { background: var(--charcoal); overflow: hidden; }
+    #s3 { background: #2C2C2C; overflow: hidden; }
     .s3-lines {
       position: absolute;
       right: -10%; top: 0; bottom: 0;
@@ -519,7 +458,7 @@
       font-family: 'Cormorant Garamond', serif;
       font-weight: 700;
       font-size: clamp(38px, 8vw, 58px);
-      color: var(--gold);
+      color: #C9A84C;
       line-height: 1;
       margin-bottom: clamp(18px, 3vw, 26px);
     }
@@ -533,7 +472,7 @@
       max-width: 82%;
     }
     .quote-block-dark {
-      border-left: 2px solid var(--gold);
+      border-left: 2px solid #C9A84C;
       padding-left: 16px;
       max-width: 80%;
     }
@@ -543,7 +482,7 @@
       font-weight: 300;
       font-size: clamp(11px, 1.9vw, 13.5px);
       line-height: 1.65;
-      color: var(--cream);
+      color: #F5F0E8;
       opacity: .8;
     }
     .quote-block-dark cite {
@@ -553,16 +492,12 @@
       font-weight: 300;
       font-size: clamp(9px, 1.5vw, 11px);
       letter-spacing: .1em;
-      color: var(--gold);
+      color: #C9A84C;
       opacity: .7;
       font-style: normal;
     }
-    .s3 .slide-counter { color: rgba(255,255,255,.25); }
 
-    /* ══════════════════════════════════════
-       SLIDE 4
-    ══════════════════════════════════════ */
-    #s4 { background: var(--cream); overflow: hidden; }
+    #s4 { background: #F5F0E8; overflow: hidden; }
     .s4-rays {
       position: absolute;
       right: -5%; top: -10%;
@@ -582,7 +517,7 @@
       font-family: 'Cormorant Garamond', serif;
       font-weight: 700;
       font-size: clamp(38px, 8vw, 58px);
-      color: var(--green);
+      color: #2D4A3E;
       line-height: 1;
       margin-bottom: clamp(18px, 3vw, 26px);
     }
@@ -596,7 +531,7 @@
       max-width: 82%;
     }
     .quote-block-light {
-      border-left: 2px solid var(--terracotta);
+      border-left: 2px solid #C4622D;
       padding-left: 16px;
       max-width: 80%;
     }
@@ -606,7 +541,7 @@
       font-weight: 300;
       font-size: clamp(11px, 1.9vw, 13.5px);
       line-height: 1.65;
-      color: var(--terracotta);
+      color: #C4622D;
     }
     .quote-block-light cite {
       display: block;
@@ -618,30 +553,19 @@
       color: #8a4020;
       font-style: normal;
     }
-    .s4 .slide-counter { color: rgba(44,44,44,.3); }
 
-    /* ══════════════════════════════════════
-       SLIDE 5
-    ══════════════════════════════════════ */
-    #s5 { background: var(--cream); }
+    #s5 { background: #F5F0E8; }
     .s5-left-half {
       position: absolute;
       left: 0; top: 0; bottom: 0;
       width: 50%;
-      background: var(--cream-dark);
+      background: #E8E0D0;
     }
     .s5-divider {
       position: absolute;
       left: 50%; top: 0; bottom: 0;
       width: 1px;
       background: rgba(44,44,44,.18);
-    }
-    #s5::after {
-      content: '';
-      position: absolute; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.4' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 1;
     }
     .s5-inner {
       position: absolute; inset: 0;
@@ -658,7 +582,7 @@
       font-weight: 700;
       font-size: clamp(16px, 3.2vw, 23px);
       line-height: 1.3;
-      color: var(--charcoal);
+      color: #2C2C2C;
       margin-bottom: clamp(22px, 3.5vw, 32px);
       max-width: 88%;
     }
@@ -674,11 +598,11 @@
       font-size: clamp(13px, 2.4vw, 17px);
       letter-spacing: .12em;
       text-transform: uppercase;
-      color: var(--charcoal);
+      color: #2C2C2C;
       margin-bottom: 12px;
     }
     .s5-col:first-child .s5-col-title { color: #8a3020; }
-    .s5-col:last-child  .s5-col-title { color: var(--green); }
+    .s5-col:last-child  .s5-col-title { color: #2D4A3E; }
     .s5-items {
       list-style: none;
       display: flex;
@@ -698,18 +622,16 @@
       font-weight: 700;
       font-size: clamp(12px, 2.2vw, 15.5px);
       line-height: 1.45;
-      color: var(--charcoal);
+      color: #2C2C2C;
       border-top: 1px solid rgba(44,44,44,.15);
       padding-top: clamp(16px, 2.5vw, 22px);
       width: 100%;
       text-align: center;
     }
-    .s5 .slide-counter { color: rgba(44,44,44,.3); }
   </style>
 </head>
 <body>
 
-<!-- Screenshot mode bar -->
 <div class="ss-bar">
   <div class="ss-label">
     <span class="camera">📷</span>
@@ -718,101 +640,49 @@
   <button class="ss-done" onclick="exitScreenshot()">✓ Done</button>
 </div>
 
-<!-- ─────────────── CAROUSEL ─────────────── -->
 <div class="viewport" id="carousel">
-
   <button class="nav prev" id="prevBtn" aria-label="Previous slide">
     <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
   </button>
 
   <div class="track" id="track">
 
-    <!-- ════ SLIDE 1 ════ -->
     <div class="slide" id="s1">
       <div class="s1-photo" id="s1Photo"></div>
       <div class="s1-photo-overlay"></div>
       <div class="s1-inner">
-        <p class="s1-quote">
-          Finding ends the search.<br/>
-          The search blocks the finding.
-        </p>
+        <p class="s1-quote">Finding ends the search.<br/>The search blocks the finding.</p>
         <span class="s1-sub">Hermann Hesse knew it too.</span>
       </div>
-      <!-- photo picker -->
       <label class="photo-picker-label" for="photoInput">
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
         <span id="photoPickerText">Set photo</span>
       </label>
       <input type="file" id="photoInput" accept="image/*" />
-      <div class="swipe-hint">
-        swipe
-        <svg viewBox="0 0 18 10">
-          <line x1="0" y1="5" x2="14" y2="5"/>
-          <polyline points="9 1 14 5 9 9"/>
-        </svg>
-      </div>
+      <div class="swipe-hint">swipe <svg viewBox="0 0 18 10"><line x1="0" y1="5" x2="14" y2="5"/><polyline points="9 1 14 5 9 9"/></svg></div>
       <span class="slide-counter" style="color:rgba(255,255,255,.3)">1 / 5</span>
       <span class="slide-handle">@gilkfir</span>
     </div>
 
-    <!-- ════ SLIDE 2 ════ -->
     <div class="slide" id="s2">
       <div class="s2-inner">
         <h2 class="s2-headline">We think they&rsquo;re on<br/>the same spectrum.</h2>
         <div class="spectrum-row">
           <span class="spec-label">Search</span>
-          <div class="arrow-track">
-            <div class="arrow-dots"></div>
-            <div class="strike-line"></div>
-          </div>
+          <div class="arrow-track"><div class="arrow-dots"></div><div class="strike-line"></div></div>
           <span class="spec-label">Find</span>
         </div>
-        <p class="s2-body">
-          We believe searching leads to finding.<br/>
-          That if you search hard enough &mdash; you will find.<br/>
-          <span class="bold-line">This is the mistake.</span>
-        </p>
+        <p class="s2-body">We believe searching leads to finding.<br/>That if you search hard enough &mdash; you will find.<br/><span class="bold-line">This is the mistake.</span></p>
       </div>
       <span class="slide-counter" style="color:rgba(44,44,44,.3)">2 / 5</span>
       <span class="slide-handle">@gilkfir</span>
     </div>
 
-    <!-- ════ SLIDE 3 ════ -->
     <div class="slide" id="s3">
-      <svg class="s3-lines" viewBox="0 0 300 600" preserveAspectRatio="none" aria-hidden="true">
-        <g stroke="white" stroke-width="1" fill="none">
-          <line x1="300" y1="300" x2="0"   y2="0"/>
-          <line x1="300" y1="300" x2="30"  y2="0"/>
-          <line x1="300" y1="300" x2="60"  y2="0"/>
-          <line x1="300" y1="300" x2="90"  y2="0"/>
-          <line x1="300" y1="300" x2="120" y2="0"/>
-          <line x1="300" y1="300" x2="150" y2="0"/>
-          <line x1="300" y1="300" x2="180" y2="0"/>
-          <line x1="300" y1="300" x2="210" y2="0"/>
-          <line x1="300" y1="300" x2="240" y2="0"/>
-          <line x1="300" y1="300" x2="270" y2="0"/>
-          <line x1="300" y1="300" x2="300" y2="0"/>
-          <line x1="300" y1="300" x2="0"   y2="600"/>
-          <line x1="300" y1="300" x2="30"  y2="600"/>
-          <line x1="300" y1="300" x2="60"  y2="600"/>
-          <line x1="300" y1="300" x2="90"  y2="600"/>
-          <line x1="300" y1="300" x2="120" y2="600"/>
-          <line x1="300" y1="300" x2="150" y2="600"/>
-          <line x1="300" y1="300" x2="180" y2="600"/>
-          <line x1="300" y1="300" x2="210" y2="600"/>
-          <line x1="300" y1="300" x2="240" y2="600"/>
-          <line x1="300" y1="300" x2="270" y2="600"/>
-          <line x1="300" y1="300" x2="300" y2="600"/>
-        </g>
-      </svg>
+      <svg class="s3-lines" viewBox="0 0 300 600" preserveAspectRatio="none" aria-hidden="true"><g stroke="white" stroke-width="1" fill="none"><line x1="300" y1="300" x2="0" y2="0"/><line x1="300" y1="300" x2="30" y2="0"/><line x1="300" y1="300" x2="60" y2="0"/><line x1="300" y1="300" x2="90" y2="0"/><line x1="300" y1="300" x2="120" y2="0"/><line x1="300" y1="300" x2="150" y2="0"/><line x1="300" y1="300" x2="180" y2="0"/><line x1="300" y1="300" x2="210" y2="0"/><line x1="300" y1="300" x2="240" y2="0"/><line x1="300" y1="300" x2="270" y2="0"/><line x1="300" y1="300" x2="300" y2="0"/><line x1="300" y1="300" x2="0" y2="600"/><line x1="300" y1="300" x2="30" y2="600"/><line x1="300" y1="300" x2="60" y2="600"/><line x1="300" y1="300" x2="90" y2="600"/><line x1="300" y1="300" x2="120" y2="600"/><line x1="300" y1="300" x2="150" y2="600"/><line x1="300" y1="300" x2="180" y2="600"/><line x1="300" y1="300" x2="210" y2="600"/><line x1="300" y1="300" x2="240" y2="600"/><line x1="300" y1="300" x2="270" y2="600"/><line x1="300" y1="300" x2="300" y2="600"/></g></svg>
       <div class="s3-inner">
         <h2 class="s3-word">Searching</h2>
-        <p class="s3-body">
-          When you search, you activate a filter &mdash; your mind narrows
-          to match what it already expects to find. You see only
-          confirmations. You absorb nothing new. Searching tightens
-          perception. It makes you less receptive, not more.
-        </p>
+        <p class="s3-body">When you search, you activate a filter &mdash; your mind narrows to match what it already expects to find. You see only confirmations. You absorb nothing new. Searching tightens perception. It makes you less receptive, not more.</p>
         <blockquote class="quote-block-dark">
           <p>&ldquo;It happens quite easily that he only sees the thing that he is seeking.&rdquo;</p>
           <cite>&mdash; Siddhartha, Hermann Hesse</cite>
@@ -822,40 +692,11 @@
       <span class="slide-handle">@gilkfir</span>
     </div>
 
-    <!-- ════ SLIDE 4 ════ -->
     <div class="slide" id="s4">
-      <svg class="s4-rays" viewBox="0 0 300 600" preserveAspectRatio="none" aria-hidden="true">
-        <g stroke="#2D4A3E" stroke-width="1" fill="none">
-          <line x1="0" y1="300" x2="300" y2="0"/>
-          <line x1="0" y1="300" x2="300" y2="30"/>
-          <line x1="0" y1="300" x2="300" y2="60"/>
-          <line x1="0" y1="300" x2="300" y2="90"/>
-          <line x1="0" y1="300" x2="300" y2="120"/>
-          <line x1="0" y1="300" x2="300" y2="150"/>
-          <line x1="0" y1="300" x2="300" y2="180"/>
-          <line x1="0" y1="300" x2="300" y2="210"/>
-          <line x1="0" y1="300" x2="300" y2="240"/>
-          <line x1="0" y1="300" x2="300" y2="270"/>
-          <line x1="0" y1="300" x2="300" y2="300"/>
-          <line x1="0" y1="300" x2="300" y2="330"/>
-          <line x1="0" y1="300" x2="300" y2="360"/>
-          <line x1="0" y1="300" x2="300" y2="390"/>
-          <line x1="0" y1="300" x2="300" y2="420"/>
-          <line x1="0" y1="300" x2="300" y2="450"/>
-          <line x1="0" y1="300" x2="300" y2="480"/>
-          <line x1="0" y1="300" x2="300" y2="510"/>
-          <line x1="0" y1="300" x2="300" y2="540"/>
-          <line x1="0" y1="300" x2="300" y2="570"/>
-          <line x1="0" y1="300" x2="300" y2="600"/>
-        </g>
-      </svg>
+      <svg class="s4-rays" viewBox="0 0 300 600" preserveAspectRatio="none" aria-hidden="true"><g stroke="#2D4A3E" stroke-width="1" fill="none"><line x1="0" y1="300" x2="300" y2="0"/><line x1="0" y1="300" x2="300" y2="30"/><line x1="0" y1="300" x2="300" y2="60"/><line x1="0" y1="300" x2="300" y2="90"/><line x1="0" y1="300" x2="300" y2="120"/><line x1="0" y1="300" x2="300" y2="150"/><line x1="0" y1="300" x2="300" y2="180"/><line x1="0" y1="300" x2="300" y2="210"/><line x1="0" y1="300" x2="300" y2="240"/><line x1="0" y1="300" x2="300" y2="270"/><line x1="0" y1="300" x2="300" y2="300"/><line x1="0" y1="300" x2="300" y2="330"/><line x1="0" y1="300" x2="300" y2="360"/><line x1="0" y1="300" x2="300" y2="390"/><line x1="0" y1="300" x2="300" y2="420"/><line x1="0" y1="300" x2="300" y2="450"/><line x1="0" y1="300" x2="300" y2="480"/><line x1="0" y1="300" x2="300" y2="510"/><line x1="0" y1="300" x2="300" y2="540"/><line x1="0" y1="300" x2="300" y2="570"/><line x1="0" y1="300" x2="300" y2="600"/></g></svg>
       <div class="s4-inner">
         <h2 class="s4-word">Finding</h2>
-        <p class="s4-body">
-          Finding is a different state entirely. To find, you must be open &mdash;
-          not looking for something specific. Finding happens when you release
-          the goal. It expands perception. It lets reality surprise you.
-        </p>
+        <p class="s4-body">Finding is a different state entirely. To find, you must be open &mdash; not looking for something specific. Finding happens when you release the goal. It expands perception. It lets reality surprise you.</p>
         <blockquote class="quote-block-light">
           <p>&ldquo;Finding means: to be free, to be receptive, to have no goal.&rdquo;</p>
           <cite>&mdash; Siddhartha, Hermann Hesse</cite>
@@ -865,192 +706,67 @@
       <span class="slide-handle">@gilkfir</span>
     </div>
 
-    <!-- ════ SLIDE 5 ════ -->
     <div class="slide" id="s5">
       <div class="s5-left-half"></div>
       <div class="s5-divider"></div>
       <div class="s5-inner">
         <h2 class="s5-headline">They don&rsquo;t share a spectrum.<br/>They require different states of being.</h2>
         <div class="s5-columns">
-          <div class="s5-col">
-            <div class="s5-col-title">Searching</div>
-            <ul class="s5-items">
-              <li>narrows</li>
-              <li>filters</li>
-              <li>driven</li>
-              <li>goal-obsessed</li>
-            </ul>
-          </div>
-          <div class="s5-col">
-            <div class="s5-col-title">Finding</div>
-            <ul class="s5-items">
-              <li>opens</li>
-              <li>receives</li>
-              <li>present</li>
-              <li>goal-free</li>
-            </ul>
-          </div>
+          <div class="s5-col"><div class="s5-col-title">Searching</div><ul class="s5-items"><li>narrows</li><li>filters</li><li>driven</li><li>goal-obsessed</li></ul></div>
+          <div class="s5-col"><div class="s5-col-title">Finding</div><ul class="s5-items"><li>opens</li><li>receives</li><li>present</li><li>goal-free</li></ul></div>
         </div>
-        <p class="s5-closer">
-          You don&rsquo;t find by searching harder.<br/>
-          You find by letting go of the search and opening up to what is.
-        </p>
+        <p class="s5-closer">You don&rsquo;t find by searching harder.<br/>You find by letting go of the search and opening up to what is.</p>
       </div>
       <span class="slide-counter" style="color:rgba(44,44,44,.3)">5 / 5</span>
       <span class="slide-handle">@gilkfir</span>
-      <!-- Instagram-style engagement bar -->
       <div class="ig-actions">
-        <!-- Like -->
-        <div class="ig-icon">
-          <svg viewBox="0 0 24 24">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-          </svg>
-        </div>
-        <!-- Comment -->
-        <div class="ig-icon">
-          <svg viewBox="0 0 24 24">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-          </svg>
-        </div>
-        <!-- Share / Send -->
-        <div class="ig-icon">
-          <svg viewBox="0 0 24 24">
-            <line x1="22" y1="2" x2="11" y2="13"/>
-            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-          </svg>
-        </div>
-        <!-- Save (bookmark) — pushed to right -->
-        <div class="ig-icon ig-save">
-          <svg viewBox="0 0 24 24">
-            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
-          </svg>
-        </div>
+        <div class="ig-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+        <div class="ig-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <div class="ig-icon"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div>
+        <div class="ig-icon ig-save"><svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></div>
       </div>
     </div>
 
-  </div><!-- /track -->
+  </div>
 
   <button class="nav next" id="nextBtn" aria-label="Next slide">
     <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
   </button>
+</div>
 
-</div><!-- /viewport -->
-
-<!-- dots -->
 <div class="counter-bar">
-  <div class="dot active" data-i="0"></div>
-  <div class="dot" data-i="1"></div>
-  <div class="dot" data-i="2"></div>
-  <div class="dot" data-i="3"></div>
-  <div class="dot" data-i="4"></div>
+  <div class="dot active" data-i="0"></div><div class="dot" data-i="1"></div><div class="dot" data-i="2"></div><div class="dot" data-i="3"></div><div class="dot" data-i="4"></div>
   <span class="counter-label" id="counterLabel">1 / 5</span>
 </div>
 
-<!-- ── Screenshot panel ── -->
 <div class="export-panel">
   <div class="export-title">Tap a slide → screenshot it → save to Photos → upload to Instagram</div>
   <div class="export-buttons">
-    <button class="dl-btn" onclick="enterScreenshot(0)">
-      <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 2H8l-2 4h12z"/><circle cx="12" cy="13" r="3"/></svg>
-      Slide 1
-    </button>
-    <button class="dl-btn" onclick="enterScreenshot(1)">
-      <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 2H8l-2 4h12z"/><circle cx="12" cy="13" r="3"/></svg>
-      Slide 2
-    </button>
-    <button class="dl-btn" onclick="enterScreenshot(2)">
-      <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 2H8l-2 4h12z"/><circle cx="12" cy="13" r="3"/></svg>
-      Slide 3
-    </button>
-    <button class="dl-btn" onclick="enterScreenshot(3)">
-      <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 2H8l-2 4h12z"/><circle cx="12" cy="13" r="3"/></svg>
-      Slide 4
-    </button>
-    <button class="dl-btn" onclick="enterScreenshot(4)">
-      <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 2H8l-2 4h12z"/><circle cx="12" cy="13" r="3"/></svg>
-      Slide 5
-    </button>
+    <button class="dl-btn" onclick="enterScreenshot(0)"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 2H8l-2 4h12z"/><circle cx="12" cy="13" r="3"/></svg>Slide 1</button>
+    <button class="dl-btn" onclick="enterScreenshot(1)"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 2H8l-2 4h12z"/><circle cx="12" cy="13" r="3"/></svg>Slide 2</button>
+    <button class="dl-btn" onclick="enterScreenshot(2)"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 2H8l-2 4h12z"/><circle cx="12" cy="13" r="3"/></svg>Slide 3</button>
+    <button class="dl-btn" onclick="enterScreenshot(3)"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 2H8l-2 4h12z"/><circle cx="12" cy="13" r="3"/></svg>Slide 4</button>
+    <button class="dl-btn" onclick="enterScreenshot(4)"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 2H8l-2 4h12z"/><circle cx="12" cy="13" r="3"/></svg>Slide 5</button>
   </div>
 </div>
 
 <script>
-  /* ─── Navigation ─── */
-  const track   = document.getElementById('track');
-  const prevBtn = document.getElementById('prevBtn');
-  const nextBtn = document.getElementById('nextBtn');
-  const dots    = document.querySelectorAll('.dot');
-  const label   = document.getElementById('counterLabel');
-  const total   = 5;
-  let current   = 0;
-
-  function goTo(n) {
-    current = (n + total) % total;
-    track.style.transform = `translateX(-${current * 20}%)`;
-    dots.forEach((d, i) => d.classList.toggle('active', i === current));
-    label.textContent = `${current + 1} / ${total}`;
-    prevBtn.style.opacity = current === 0 ? '0' : '1';
-    nextBtn.style.opacity = current === total - 1 ? '0' : '1';
-  }
-
-  prevBtn.addEventListener('click', () => goTo(current - 1));
-  nextBtn.addEventListener('click', () => goTo(current + 1));
-  dots.forEach(d => d.addEventListener('click', () => goTo(+d.dataset.i)));
-
-  document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight') goTo(current + 1);
-    if (e.key === 'ArrowLeft')  goTo(current - 1);
-  });
-
-  let startX = 0;
-  const vp = document.getElementById('carousel');
-  vp.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
-  vp.addEventListener('touchend',   e => {
-    const dx = e.changedTouches[0].clientX - startX;
-    if (Math.abs(dx) > 40) goTo(current + (dx < 0 ? 1 : -1));
-  });
-
+  const track=document.getElementById('track'),prevBtn=document.getElementById('prevBtn'),nextBtn=document.getElementById('nextBtn'),dots=document.querySelectorAll('.dot'),label=document.getElementById('counterLabel');
+  const total=5;let current=0;
+  function goTo(n){current=(n+total)%total;track.style.transform=`translateX(-${current*20}%)`;dots.forEach((d,i)=>d.classList.toggle('active',i===current));label.textContent=`${current+1} / ${total}`;prevBtn.style.opacity=current===0?'0':'1';nextBtn.style.opacity=current===total-1?'0':'1';}
+  prevBtn.addEventListener('click',()=>goTo(current-1));nextBtn.addEventListener('click',()=>goTo(current+1));dots.forEach(d=>d.addEventListener('click',()=>goTo(+d.dataset.i)));
+  document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')goTo(current+1);if(e.key==='ArrowLeft')goTo(current-1);});
+  let startX=0;const vp=document.getElementById('carousel');vp.addEventListener('touchstart',e=>{startX=e.touches[0].clientX;},{passive:true});vp.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-startX;if(Math.abs(dx)>40)goTo(current+(dx<0?1:-1));});
   goTo(0);
 
-  /* ─── Photo picker ─── */
-  const photoInput  = document.getElementById('photoInput');
-  const s1El        = document.getElementById('s1');
-  const s1PhotoEl   = document.getElementById('s1Photo');
-  const pickerText  = document.getElementById('photoPickerText');
+  const photoInput=document.getElementById('photoInput'),s1El=document.getElementById('s1'),s1PhotoEl=document.getElementById('s1Photo'),pickerText=document.getElementById('photoPickerText');
+  function applyPhoto(dataUrl){s1PhotoEl.style.backgroundImage=`url(${dataUrl})`;s1El.classList.add('has-photo');pickerText.textContent='Change photo';try{localStorage.setItem('slide1photo',dataUrl);}catch(e){}}
+  try{const saved=localStorage.getItem('slide1photo');if(saved)applyPhoto(saved);}catch(e){}
+  photoInput.addEventListener('change',e=>{const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>applyPhoto(ev.target.result);reader.readAsDataURL(file);});
 
-  function applyPhoto(dataUrl) {
-    s1PhotoEl.style.backgroundImage = `url(${dataUrl})`;
-    s1El.classList.add('has-photo');
-    pickerText.textContent = 'Change photo';
-    try { localStorage.setItem('slide1photo', dataUrl); } catch(e) {}
-  }
-
-  /* restore from previous session */
-  try {
-    const saved = localStorage.getItem('slide1photo');
-    if (saved) applyPhoto(saved);
-  } catch(e) {}
-
-  photoInput.addEventListener('change', e => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => applyPhoto(ev.target.result);
-    reader.readAsDataURL(file);
-  });
-
-  /* ─── Screenshot mode ─── */
-  const ssLabel = document.getElementById('ssSlideLabel');
-
-  function enterScreenshot(idx) {
-    goTo(idx);
-    ssLabel.textContent = `Slide ${idx + 1} of 5`;
-    window.scrollTo(0, 0);
-    document.body.classList.add('ss-mode');
-  }
-
-  function exitScreenshot() {
-    document.body.classList.remove('ss-mode');
-  }
+  const ssLabel=document.getElementById('ssSlideLabel');
+  function enterScreenshot(idx){goTo(idx);ssLabel.textContent=`Slide ${idx+1} of 5`;window.scrollTo(0,0);document.body.classList.add('ss-mode');}
+  function exitScreenshot(){document.body.classList.remove('ss-mode');}
 </script>
 </body>
 </html>
